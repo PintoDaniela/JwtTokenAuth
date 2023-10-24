@@ -1,4 +1,4 @@
-namespace JwtTokenTerst2
+namespace JwtTokenTest2
 {
     public class WeatherForecast
     {

@@ -1,4 +1,4 @@
-﻿namespace JwtTokenTerst2.DTOs
+﻿namespace JwtTokenTest2.DTOs
 {
     public class UserDto
     {

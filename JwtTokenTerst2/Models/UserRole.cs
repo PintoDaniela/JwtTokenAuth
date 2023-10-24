@@ -1,4 +1,4 @@
-﻿namespace JwtTokenTerst2.Models
+﻿namespace JwtTokenTest2.Models
 {
     public class UserRole
     {       

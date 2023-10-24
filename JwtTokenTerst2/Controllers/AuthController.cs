@@ -1,7 +1,7 @@
-﻿using JwtTokenTerst2.Data;
-using JwtTokenTerst2.DTOs;
-using JwtTokenTerst2.Helper;
-using JwtTokenTerst2.Models;
+﻿using JwtTokenTest2.Data;
+using JwtTokenTest2.DTOs;
+using JwtTokenTest2.Helper;
+using JwtTokenTest2.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,7 +9,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace JwtTokenTerst2.Controllers
+namespace JwtTokenTest2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

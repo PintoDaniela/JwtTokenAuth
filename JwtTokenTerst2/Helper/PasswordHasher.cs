@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace JwtTokenTerst2.Helper
+namespace JwtTokenTest2.Helper
 {
     public class PasswordHasher
     {

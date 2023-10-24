@@ -1,8 +1,8 @@
-﻿using JwtTokenTerst2.Models;
+﻿using JwtTokenTest2.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
-namespace JwtTokenTerst2.Data
+namespace JwtTokenTest2.Data
 {
     public class AppDbContext : DbContext
     {

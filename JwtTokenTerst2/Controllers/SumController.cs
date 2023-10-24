@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JwtTokenTerst2.Controllers
+namespace JwtTokenTest2.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]

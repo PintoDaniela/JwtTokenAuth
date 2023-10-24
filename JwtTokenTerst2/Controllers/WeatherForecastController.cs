@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace JwtTokenTerst2.Controllers
+namespace JwtTokenTest2.Controllers
 {
     [ApiController]
     [Route("[controller]")]

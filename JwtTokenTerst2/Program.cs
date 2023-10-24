@@ -1,5 +1,5 @@
-using JwtTokenTerst2.Data;
-using JwtTokenTerst2.Models;
+using JwtTokenTest2.Data;
+using JwtTokenTest2.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

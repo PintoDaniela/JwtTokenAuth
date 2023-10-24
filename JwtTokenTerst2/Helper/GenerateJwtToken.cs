@@ -2,10 +2,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using JwtTokenTerst2.Models;
+using JwtTokenTest2.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-namespace JwtTokenTerst2.Helper
+namespace JwtTokenTest2.Helper
 {
     public static class JwtTokenGenerator
     {       

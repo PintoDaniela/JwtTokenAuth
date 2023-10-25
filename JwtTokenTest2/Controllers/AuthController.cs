@@ -16,12 +16,12 @@ namespace JwtTokenTest2.Controllers
     public class AuthController : ControllerBase
     {        
         private readonly IConfiguration _config;
-        private readonly AppDbContext _appDbContext;
+        private readonly AppDbContext _appDbContext;        
 
         public AuthController(IConfiguration config, AppDbContext appDbContext)
         {           
             _config = config;
-            _appDbContext = appDbContext;
+            _appDbContext = appDbContext;           
         }
 
 
@@ -61,8 +61,29 @@ namespace JwtTokenTest2.Controllers
                 return Unauthorized("Credenciales inválidas");
             }
    
-            var token = JwtTokenGenerator.GenerateJwtToken(user, _config);
+            var token = JwtTokenManager.GenerateJwtToken(user, _config);
             return Ok(new { Token = token });
-        }      
+        }
+
+
+
+        /*
+        [HttpPost("getNewAccessToken")]
+        public IActionResult GetNewAccessToken()
+        {
+            var validRefreshToken = JwtTokenManager.ValidRefreshToken(_contextAccessor, _config);
+            if (string.IsNullOrEmpty(validRefreshToken))
+            {
+                return BadRequest("Requiere nuevo inicio de sesión para obtener un nuevo Token de acceso.");
+            }
+            var userLogin = JwtTokenManager.GetUserFromRefreshToken(validRefreshToken, _config, _appDbContext);
+            if (userLogin == null)
+            {
+                return Unauthorized("Credenciales inválidas");
+            }
+            var token = JwtTokenManager.GenerateJwtToken(userLogin, _config);
+            return Ok(new { Token = token });
+        }
+        */
     }
 }

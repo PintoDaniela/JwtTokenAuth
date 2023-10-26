@@ -66,24 +66,17 @@ namespace JwtTokenTest2.Controllers
         }
 
 
-
-        /*
-        [HttpPost("getNewAccessToken")]
-        public IActionResult GetNewAccessToken()
+        [HttpPost("validate-token")]
+        public IActionResult ValidateToken([FromHeader]string token)
         {
-            var validRefreshToken = JwtTokenManager.ValidRefreshToken(_contextAccessor, _config);
-            if (string.IsNullOrEmpty(validRefreshToken))
+            bool tokenValido = JwtTokenManager.ValidateToken(token, _config);
+
+            if (!tokenValido)
             {
-                return BadRequest("Requiere nuevo inicio de sesión para obtener un nuevo Token de acceso.");
+                return Unauthorized("Token inválido. Inicie sesión para generar un nuevo token de acceso.");
             }
-            var userLogin = JwtTokenManager.GetUserFromRefreshToken(validRefreshToken, _config, _appDbContext);
-            if (userLogin == null)
-            {
-                return Unauthorized("Credenciales inválidas");
-            }
-            var token = JwtTokenManager.GenerateJwtToken(userLogin, _config);
-            return Ok(new { Token = token });
+
+            return Ok("Token válido.");
         }
-        */
     }
 }

@@ -18,9 +18,7 @@ namespace JwtTokenTest2.Helper
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                // Guardar el ID del usuario en el claim para poder recuperarlo en otras operaciones
-                new Claim("UserId", user.Id.ToString())
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName)                
             };
 
             int TokenExpiration = Convert.ToInt32(configuration["JwtSettings:TokenExpirationMinutes"]);
@@ -35,87 +33,82 @@ namespace JwtTokenTest2.Helper
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-      
-        /*
-        public static string ValidRefreshToken(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+
+
+        /*//Test para renovar el token
+        public static string ValidateRefreshTokenFromCookies(HttpContext httpContext, IConfiguration configuration)
         {
-            var refreshToken = httpContextAccessor.HttpContext.Request.Cookies["refreshToken"];
-            if (string.IsNullOrEmpty(refreshToken))
+            var refreshToken = httpContext.Request.Cookies["refreshToken"];
+
+            if (!string.IsNullOrEmpty(refreshToken))
             {
-                return "";
-            }
-
-            // Decodificar y validar el refresh token
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]));
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var validationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = securityKey,
-                ValidIssuer = configuration["JwtSettings:Issuer"],
-                ValidAudience = configuration["JwtSettings:Audience"]
-            };
-
-            try
-            {
-                SecurityToken securityToken;
-                var principal = tokenHandler.ValidateToken(refreshToken, validationParameters, out securityToken);                               
-
-                
-                return refreshToken;
-            }
-            catch (Exception ex)
-            {
-                return "";
-            }
-        }
-        */
-
-        /*
-        public static User GetUserFromRefreshToken(string refreshJwt, IConfiguration configuration, AppDbContext dbContext)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]));
-
-            var validationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = securityKey,
-                ValidIssuer = configuration["JwtSettings:Issuer"],
-                ValidAudience = configuration["JwtSettings:Audience"]
-            };
-
-            try
-            {
-                SecurityToken securityToken;
-                var claimsPrincipal = tokenHandler.ValidateToken(refreshJwt, validationParameters, out securityToken);
-
-                // Recuperar el ID del usuario del claim
-                var userIdClaim = claimsPrincipal.FindFirst("UserId");
-
-                if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                try
                 {
-                    // Buscar al usuario en tu base de datos o almacén de usuarios
-                    var user = dbContext.Users.FirstOrDefault(u => u.Id == userId);
+                    var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]));
+                    var tokenHandler = new JwtSecurityTokenHandler();
 
-                    return user;
+                    SecurityToken securityToken;
+                    var claimsPrincipal = tokenHandler.ValidateToken(refreshToken, new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = configuration["JwtSettings:Issuer"],
+                        ValidAudience = configuration["JwtSettings:Audience"],
+                        IssuerSigningKey = securityKey,
+                    }, out securityToken);
+
+                    if (securityToken is JwtSecurityToken jwtSecurityToken && claimsPrincipal.Identity.IsAuthenticated)
+                    {
+                        return refreshToken;
+                    }
+                }
+                catch (Exception)
+                {
+                    return string.Empty;
                 }
             }
-            catch (Exception ex)
-            {
-                return null;
-            }
 
-            return null;
+            return string.Empty;
         }
         */
+        //Test para renovar el token
+        public static bool ValidateToken(string token, IConfiguration configuration)
+        {
+            
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                try { 
+                    var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]));
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    //verificar validez del token, excepto fecha de expiración
+                    //Mientras no tenga registro de logs lo hago por separado para ver en qué falla. Después se pondría esta validación en true y se borraría la verificación posterior de la fecha
+                    tokenHandler.ValidateToken(token, new TokenValidationParameters
+                    {
+                        ValidateIssuer = true, 
+                        ValidateAudience = true,
+                        ValidIssuer = configuration["JwtSettings:Issuer"],
+                        ValidAudience = configuration["JwtSettings:Audience"],
+                        IssuerSigningKey = securityKey,
+                        ValidateLifetime = false
+                    }, out SecurityToken validatedToken);
+
+                    // Verificar la fecha de expiración
+                    if (validatedToken is JwtSecurityToken jwtToken && jwtToken.ValidTo > DateTime.Now)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
 
     }
 }
